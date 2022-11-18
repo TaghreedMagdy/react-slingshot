@@ -12,8 +12,29 @@ jobs:
             - "/src/"
           key: "npm_packages"
       - run: npm run lint
+  
+  test:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: "npm_packages"
+      - run: npm i
+      - run: npm run test
+
+  analyze:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm audit
 
 workflows:
   first_real_pipeline:
     jobs:
       - build
+      - test:
+        requires: build
+      -analyze:
+        requires: test
