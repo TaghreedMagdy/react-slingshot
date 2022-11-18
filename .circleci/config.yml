@@ -1,0 +1,19 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: npm i
+      - save_cache:
+          paths:
+            - "/src/"
+          key: "npm_packages"
+      - run: npm run lint
+
+workflows:
+  first_real_pipeline:
+    jobs:
+      - build
